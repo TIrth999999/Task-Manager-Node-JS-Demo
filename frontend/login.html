@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Task Manager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff006e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #38b000;
+      --gray: #6c757d;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --error: #e63946;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+    }
+    
+    .header {
+      background-color: var(--primary);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .header h2 {
+      font-weight: 600;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .back-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+    
+    .back-link i {
+      margin-right: 6px;
+    }
+    
+    .content {
+      padding: 40px 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 14px;
+    }
+    
+    .input-group {
+      position: relative;
+    }
+    
+    .input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 16px 16px 16px 45px;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+    }
+    
+    .password-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    
+    .login-btn {
+      display: block;
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s, background-color 0.2s;
+      box-shadow: var(--shadow);
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .login-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+    
+    .error-message {
+      color: var(--error);
+      margin-top: 15px;
+      font-size: 14px;
+      background-color: rgba(230, 57, 70, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 4px solid var(--error);
+      display: none;
+    }
+    
+    .error-message.visible {
+      display: block;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+    }
+    
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .divider span {
+      padding: 0 10px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .social-login {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .social-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #e9ecef;
+      color: var(--dark);
+      transition: transform 0.2s, background-color 0.2s;
+      text-decoration: none;
+    }
+    
+    .social-btn:hover {
+      transform: translateY(-3px);
+      background-color: #e9ecef;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        border-radius: 0;
+      }
+      
+      .content {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+      <h2>Welcome Back</h2>
+      <p>Log in to access your tasks</p>
+    </div>
+    
+    <div class="content">
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-group">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" id="togglePassword" style="margin-right:30px;">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-btn">
+          Log In
+        </button>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <div class="divider">
+          <span>OR LOGIN WITH</span>
+        </div>
+        
+        <div class="social-login">
+          <a href="#" class="social-btn">
+            <i class="fab fa-google"></i>
+          </a>
+          <a href="#" class="social-btn">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="social-btn">
+            <i class="fab fa-apple"></i>
+          </a>
+        </div>
+        
+        <div class="footer">
+          <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+          <p style="margin-top: 8px;"><a href="#">Forgot password?</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMessage = document.getElementById('errorMessage');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    // Toggle password visibility
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePassword.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorMessage.textContent = ''; // Clear previous errors
+      errorMessage.classList.remove('visible');
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Login failed');
+        }
+
+        if (!data.userId) {
+          throw new Error('User ID not received from server');
+        }
+
+        // Save the userId to localStorage
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('userEmail', email);
+        window.location.href = 'tasks.html';
+        
+      } catch (err) {
+        console.error('Login error:', err);
+        errorMessage.textContent = err.message || 'Something went wrong. Please try again.';
+        errorMessage.classList.add('visible');
+      }
+    });
+  </script>
+</body>
+</html>

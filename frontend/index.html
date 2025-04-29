@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff006e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #38b000;
+      --gray: #6c757d;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 480px;
+      overflow: hidden;
+      text-align: center;
+    }
+    
+    .header {
+      background-color: var(--primary);
+      color: white;
+      padding: 30px 20px;
+      position: relative;
+    }
+    
+    .header h1 {
+      font-weight: 600;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .logo {
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      background: var(--accent);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+    
+    .logo i {
+      font-size: 24px;
+      color: white;
+    }
+    
+    .content {
+      padding: 40px 30px;
+    }
+    
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 20px 0;
+      transition: transform 0.2s, background-color 0.2s;
+      box-shadow: var(--shadow);
+    }
+    
+    .btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+    
+    .btn i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    .btn.register {
+      background-color: var(--success);
+    }
+    
+    .btn.register:hover {
+      background-color: #2d9300;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+    }
+    
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .divider span {
+      padding: 0 10px;
+      color: var(--gray);
+      font-size: 14px;
+    }
+    
+    .social-login {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    
+    .social-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #e9ecef;
+      color: var(--dark);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    
+    .social-btn:hover {
+      transform: translateY(-3px);
+      background-color: #e9ecef;
+    }
+    
+    .footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        border-radius: 0;
+      }
+      
+      .content {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Task Manager</h1>
+      <p>Organize your tasks efficiently</p>
+      <div class="logo">
+        <i class="fas fa-tasks"></i>
+      </div>
+    </div>
+    
+    <div class="content">
+      <a href="login.html" class="btn">
+        <i class="fas fa-sign-in-alt"></i>
+        Login to your account
+      </a>
+      
+      <a href="register.html" class="btn register">
+        <i class="fas fa-user-plus"></i>
+        Create new account
+      </a>
+      
+      <div class="divider">
+        <span>OR CONTINUE WITH</span>
+      </div>
+      
+      <div class="social-login">
+        <a href="#" class="social-btn">
+          <i class="fab fa-google"></i>
+        </a>
+        <a href="#" class="social-btn">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="#" class="social-btn">
+          <i class="fab fa-apple"></i>
+        </a>
+      </div>
+      
+      <div class="footer">
+        <p>By using this app, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Add any JavaScript functionality here
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Task Manager App Loaded');
+    });
+  </script>
+</body>
+</html>

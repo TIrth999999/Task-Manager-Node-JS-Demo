@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="taskApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasks | Task Manager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --primary-dark: #2667cc;
+      --accent: #ff006e;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #38b000;
+      --gray: #6c757d;
+      --light-gray: #e9ecef;
+      --danger: #e63946;
+      --warning: #ffb700;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --border-radius: 16px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* Header */
+    header {
+      background-color: white;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .app-title {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+    }
+    
+    .app-title i {
+      margin-right: 10px;
+    }
+    
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .user-email {
+      font-weight: 500;
+      color: var(--gray);
+    }
+    
+    .logout-btn {
+      background-color: var(--light-gray);
+      color: var(--dark);
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .logout-btn:hover {
+      background-color: #dde1e5;
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: 30px 0;
+    }
+    
+    .dashboard-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+    
+    /* Add Task Form */
+    .add-task-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .add-task-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .add-task-title i {
+      color: var(--success);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 0.9rem;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid var(--light-gray);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.1);
+    }
+    
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+    
+    .btn-success {
+      background-color: var(--success);
+    }
+    
+    .btn-success:hover {
+      background-color: #2d9300;
+      transform: translateY(-2px);
+    }
+    
+    .btn-danger {
+      background-color: var(--danger);
+    }
+    
+    .btn-danger:hover {
+      background-color: #d32f2f;
+      transform: translateY(-2px);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    /* Task List */
+    .tasks-section {
+      margin-bottom: 30px;
+    }
+    
+    .tasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .tasks-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .tasks-title i {
+      color: var(--primary);
+    }
+    
+    .task-filters {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .filter-btn {
+      background-color: white;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .filter-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .filter-btn:hover:not(.active) {
+      background-color: var(--light-gray);
+    }
+    
+    /* Sort Controls */
+    .sort-controls {
+      background-color: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .sort-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-right: 5px;
+    }
+    
+    .sort-btn {
+      background-color: var(--light);
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    
+    .sort-btn:hover {
+      background-color: var(--light-gray);
+    }
+    
+    .sort-btn.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .sort-btn .sort-icon {
+      transition: transform 0.2s ease;
+    }
+    
+    .sort-btn.desc .sort-icon {
+      transform: rotate(180deg);
+    }
+    
+    .task-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      padding: 20px;
+      margin-bottom: 15px;
+      position: relative;
+      transition: all 0.2s ease;
+      border-left: 4px solid var(--success);
+    }
+    
+    .task-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    
+    .task-card.priority-red {
+      border-left-color: var(--danger);
+    }
+    
+    .task-card.priority-yellow {
+      border-left-color: var(--warning);
+    }
+    
+    .task-card.priority-green {
+      border-left-color: var(--success);
+    }
+    
+    .task-card.completed {
+      opacity: 0.7;
+      background-color: #f8f9fa;
+    }
+    
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+    }
+    
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    
+    .task-toggle {
+      margin-right: 15px;
+      margin-top: 2px;
+    }
+    
+    /* Custom checkbox */
+    .checkbox-container {
+      display: block;
+      position: relative;
+      padding-left: 30px;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    .checkbox-container input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 22px;
+      width: 22px;
+      background-color: #eee;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .checkbox-container:hover input ~ .checkmark {
+      background-color: #ccc;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark {
+      background-color: var(--success);
+    }
+    
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+    
+    .checkbox-container input:checked ~ .checkmark:after {
+      display: block;
+    }
+    
+    .checkbox-container .checkmark:after {
+      left: 8px;
+      top: 4px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+    
+    .task-content {
+      flex-grow: 1;
+    }
+    
+    .task-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      color: var(--dark);
+    }
+    
+    .task-description {
+      color: var(--gray);
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    
+    .task-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--gray);
+      margin-bottom: 15px;
+    }
+    
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      gap: 5px;
+    }
+    
+    .priority-badge.red {
+      background-color: rgba(230, 57, 70, 0.1);
+      color: var(--danger);
+    }
+    
+    .priority-badge.yellow {
+      background-color: rgba(255, 183, 0, 0.1);
+      color: var(--warning);
+    }
+    
+    .priority-badge.green {
+      background-color: rgba(56, 176, 0, 0.1);
+      color: var(--success);
+    }
+    
+    .task-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+    
+    .empty-state-icon {
+      font-size: 4rem;
+      color: var(--light-gray);
+      margin-bottom: 20px;
+    }
+    
+    .empty-state-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+    
+    .empty-state-text {
+      color: var(--gray);
+      margin-bottom: 20px;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal.show {
+      opacity: 1;
+    }
+    
+    .modal-dialog {
+      background-color: white;
+      margin: 10vh auto;
+      padding: 25px;
+      border-radius: var(--border-radius);
+      max-width: 500px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-50px);
+      transition: transform 0.3s ease;
+      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal.show .modal-dialog {
+      transform: translateY(0);
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+    }
+    
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .app-title {
+        margin-bottom: 10px;
+      }
+      
+      .task-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .task-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .action-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .sort-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .add-task-card, .task-card, .empty-state {
+        padding: 15px;
+      }
+      
+      .dashboard-title {
+        font-size: 1.5rem;
+      }
+      
+      .modal-dialog {
+        width: 95%;
+        margin: 5% auto;
+      }
+      
+      .task-filters {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="app-title">
+        <i class="fas fa-tasks"></i>
+        Task Manager
+      </div>
+      <div class="user-actions">
+        <span id="userEmail" class="user-email"></span>
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container" ng-controller="TaskController">
+    <div class="main-content">
+      <h1 class="dashboard-title">Your Tasks Dashboard</h1>
+      
+      <!-- Add Task Form -->
+      <div class="add-task-card">
+        <h2 class="add-task-title">
+          <i class="fas fa-plus-circle"></i>
+          Add New Task
+        </h2>
+        <form id="addTaskForm">
+          <div class="form-group">
+            <label for="taskTitle">Task Title</label>
+            <input type="text" id="taskTitle" class="form-control" placeholder="What needs to be done?" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="taskDescription">Description</label>
+            <textarea id="taskDescription" class="form-control" placeholder="Add more details about this task..."></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="taskDueDate">Due Date</label>
+              <input type="date" id="taskDueDate" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="taskPriority">Priority</label>
+              <select id="taskPriority" class="form-control">
+                <option value="Green">Low Priority</option>
+                <option value="Yellow">Medium Priority</option>
+                <option value="Red">High Priority</option>
+              </select>
+            </div>
+          </div>
+          
+          <button type="button" class="btn btn-success" onclick="addTask()">
+            <i class="fas fa-plus"></i>
+            Add Task
+          </button>
+        </form>
+      </div>
+      
+      <!-- Task List -->
+      <div class="tasks-section">
+        <div class="tasks-header">
+          <h2 class="tasks-title">
+            <i class="fas fa-list"></i>
+            Your Tasks
+          </h2>
+          <div class="task-filters">
+            <button class="filter-btn active" ng-click="filterTasks('all')">All</button>
+            <button class="filter-btn" ng-click="filterTasks('pending')">Pending</button>
+            <button class="filter-btn" ng-click="filterTasks('completed')">Completed</button>
+          </div>
+        </div>
+        
+        <!-- Sort Controls -->
+        <div class="sort-controls">
+          <span class="sort-label">Sort by:</span>
+          <button class="sort-btn" ng-class="{'active': sortField === 'title', 'desc': sortReverse}" ng-click="setSortField('title')">
+            Name <i class="fas fa-sort sort-icon"></i>
+          </button>
+          <button class="sort-btn" ng-class="{'active': sortField === 'dueDate', 'desc': sortReverse}" ng-click="setSortField('dueDate')">
+            Date <i class="fas fa-sort sort-icon"></i>
+          </button>
+          <button class="sort-btn" ng-class="{'active': sortField === 'priority', 'desc': sortReverse}" ng-click="setSortField('priority')">
+            Priority <i class="fas fa-sort sort-icon"></i>
+          </button>
+        </div>
+        
+        <div id="taskContainer">
+          <!-- Tasks will be loaded here by Angular -->
+          <div ng-if="tasks.length === 0" class="empty-state">
+            <div class="empty-state-icon">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h3 class="empty-state-title">No tasks yet</h3>
+            <p class="empty-state-text">Your task list is empty. Add your first task using the form above.</p>
+            <button class="btn btn-primary" onclick="document.getElementById('taskTitle').focus()">
+              <i class="fas fa-plus"></i> Add Your First Task
+            </button>
+          </div>
+          
+          <!-- Task Card Template -->
+          <div ng-if="tasks.length > 0" ng-repeat="task in filteredTasks = (tasks | orderBy:sortField:sortReverse | filter:statusFilter)" class="task-card priority-{{task.priority.toLowerCase()}}" ng-class="{'completed': task.completed}">
+            <div class="task-header">
+              <div class="task-toggle">
+                <label class="checkbox-container">
+                  <input type="checkbox" ng-checked="task.completed" ng-click="toggleTaskCompletion(task._id, !task.completed)">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="task-content">
+                <h3 class="task-title">{{task.title}}</h3>
+                <p class="task-description">{{task.description || 'No description provided'}}</p>
+                <div class="task-meta">
+                  <div class="meta-item">
+                    <i class="far fa-calendar-alt"></i>
+                    Due: {{task.dueDate ? (task.dueDate | date:'mediumDate') : 'No due date'}}
+                  </div>
+                  <div class="meta-item">
+                    <span class="priority-badge" ng-class="{'red': task.priority === 'Red', 'yellow': task.priority === 'Yellow', 'green': task.priority === 'Green'}">
+                      <i class="fas fa-flag"></i> 
+                      {{task.priority === 'Red' ? 'High' : (task.priority === 'Yellow' ? 'Medium' : 'Low')}}
+                    </span>
+                  </div>
+                </div>
+                <div class="task-actions">
+                  <button class="btn btn-primary action-btn" ng-click="openEditModal(task._id)">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
+                  <button class="btn btn-danger action-btn" ng-click="deleteTask(task._id)">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit Task Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Edit Task</h3>
+          <button type="button" class="modal-close" onclick="closeEditModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <form id="editTaskForm">
+            <input type="hidden" id="editTaskId">
+            
+            <div class="form-group">
+              <label for="editTaskTitle">Task Title</label>
+              <input type="text" id="editTaskTitle" class="form-control" placeholder="What needs to be done?" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="editTaskDescription">Description</label>
+              <textarea id="editTaskDescription" class="form-control" placeholder="Add more details about this task..."></textarea>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="editTaskDueDate">Due Date</label>
+                <input type="date" id="editTaskDueDate" class="form-control">
+              </div>
+              
+              <div class="form-group">
+                <label for="editTaskPriority">Priority</label>
+                <select id="editTaskPriority" class="form-control">
+                  <option value="Green">Low Priority</option>
+                  <option value="Yellow">Medium Priority</option>
+                  <option value="Red">High Priority</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="checkbox-container">
+                Mark as completed
+                <input type="checkbox" id="editTaskCompleted">
+                <span class="checkmark"></span>
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" onclick="closeEditModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="updateTask()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api';
+    // Initialize AngularJS app
+    var app = angular.module('taskApp', []);
+
+    app.controller('TaskController', function($scope, $http) {
+
+      $scope.tasks = [];
+      $scope.sortField = 'title';
+      $scope.sortReverse = false;
+      $scope.statusFilter = {};
+      
+      // Initialize tasks
+      $scope.initTasks = function() {
+        $scope.userId = localStorage.getItem('userId');
+        
+        if (!$scope.userId || $scope.userId === 'undefined') {
+          console.error('Invalid or missing userId in localStorage');
+          alert('You need to login first');
+          window.location.href = 'login.html';
+        } else {
+          console.log('Found valid userId:', $scope.userId);
+          $scope.fetchUserEmail();
+          $scope.fetchTasks();
+        }
+      };
+      
+      $scope.fetchUserEmail = function() {
+        const userEmail = localStorage.getItem('userEmail');
+        
+        if (userEmail && userEmail !== 'undefined') {
+          document.getElementById('userEmail').textContent = userEmail;
+        } else {
+          // Try to get the email from the server
+          // This requires adding a new endpoint to your backend API
+          fetch(`${API_URL}/users/${$scope.userId}`)
+            .then(res => {
+              if (!res.ok) throw new Error(`Failed to fetch user: ${res.status}`);
+              return res.json();
+            })
+            .then(user => {
+              document.getElementById('userEmail').textContent = user.email;
+              // Store it for future use
+              localStorage.setItem('userEmail', user.email);
+            })
+            .catch(error => {
+              console.error('Error fetching user email:', error);
+              document.getElementById('userEmail').textContent = 'Unknown User';
+            });
+        }
+      };
+      
+      // Set sort field
+      $scope.setSortField = function(field) {
+        if ($scope.sortField === field) {
+          $scope.sortReverse = !$scope.sortReverse;
+        } else {
+          $scope.sortField = field;
+          $scope.sortReverse = false;
+        }
+      };
+      
+      // Filter tasks
+      $scope.filterTasks = function(status) {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        if (status === 'all') {
+          $scope.statusFilter = {};
+        } else if (status === 'completed') {
+          $scope.statusFilter = { completed: true };
+        } else if (status === 'pending') {
+          $scope.statusFilter = { completed: false };
+        }
+      };
+      
+      // Fetch tasks for the logged-in user
+      $scope.fetchTasks = function() {
+        fetch(`${API_URL}/tasks/${$scope.userId}`)
+          .then(res => {
+            if (!res.ok) throw new Error(`Failed to fetch tasks: ${res.status}`);
+            return res.json();
+          })
+          .then(tasks => {
+            $scope.tasks = tasks;
+            $scope.$apply();
+          })
+          .catch(error => {
+            console.error('Error fetching tasks:', error);
+            $scope.tasks = [];
+            $scope.$apply();
+          });
+      };
+      
+      // Toggle task completion status
+      $scope.toggleTaskCompletion = function(id, completed) {
+        // Find the current task in the array
+        const task = $scope.tasks.find(t => t._id === id);
+        
+        if (!task) return;
+        
+        fetch(`${API_URL}/tasks/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...task,
+            completed: completed
+          })
+        })
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to update task');
+          $scope.fetchTasks();
+        })
+        .catch(error => {
+          console.error('Error updating task completion:', error);
+          alert(`Error: ${error.message}`);
+        });
+      };
+      
+      // Open edit modal
+      $scope.openEditModal = function(id) {
+        const task = $scope.tasks.find(t => t._id === id);
+        if (!task) return;
+        
+        document.getElementById('editTaskId').value = task._id;
+        document.getElementById('editTaskTitle').value = task.title;
+        document.getElementById('editTaskDescription').value = task.description || '';
+        document.getElementById('editTaskDueDate').value = task.dueDate ? task.dueDate.split('T')[0] : '';
+        document.getElementById('editTaskPriority').value = task.priority;
+        document.getElementById('editTaskCompleted').checked = task.completed;
+        
+        // Show modal with animation
+        const modal = document.getElementById('editModal');
+        modal.style.display = 'block';
+        setTimeout(() => {
+          modal.classList.add('show');
+        }, 10);
+      };
+      
+      // Delete task
+      $scope.deleteTask = function(id) {
+        if (!confirm('Are you sure you want to delete this task?')) return;
+        
+        fetch(`${API_URL}/tasks/${id}`, { method: 'DELETE' })
+          .then(response => {
+            if (!response.ok) throw new Error('Failed to delete task');
+            $scope.fetchTasks();
+          })
+          .catch(error => {
+            console.error('Error deleting task:', error);
+            alert(`Error deleting task: ${error.message}`);
+          });
+      };
+      
+      // Format date for display
+      $scope.formatDate = function(dateString) {
+        if (!dateString) return 'No due date';
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      };
+      
+      // Initialize the controller
+      $scope.initTasks();
+    });
+
+    // Close the edit modal
+    function closeEditModal() {
+      const modal = document.getElementById('editModal');
+      modal.classList.remove('show');
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300); // match transition time
+    }
+
+    // Update task with edited values
+    function updateTask() {
+      const id = document.getElementById('editTaskId').value;
+      const title = document.getElementById('editTaskTitle').value.trim();
+      const description = document.getElementById('editTaskDescription').value.trim();
+      const dueDate = document.getElementById('editTaskDueDate').value;
+      const priority = document.getElementById('editTaskPriority').value;
+      const completed = document.getElementById('editTaskCompleted').checked;
+      const userId = localStorage.getItem('userId');
+      
+      if (!title) {
+        alert('Please enter a task title.');
+        return;
+      }
+      
+      fetch(`${API_URL}/tasks/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          description,
+          dueDate,
+          priority,
+          completed,
+          userId
+        })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to update task');
+        closeEditModal();
+        // Refresh the Angular scope
+        const scope = angular.element(document.querySelector('[ng-controller="TaskController"]')).scope();
+        scope.fetchTasks();
+        scope.$apply();
+      })
+      .catch(error => {
+        console.error('Error updating task:', error);
+        alert(`Error: ${error.message}`);
+      });
+    }
+
+    // Add a new task
+    function addTask() {
+      const title = document.getElementById('taskTitle').value.trim();
+      const description = document.getElementById('taskDescription').value.trim();
+      const dueDate = document.getElementById('taskDueDate').value;
+      const priority = document.getElementById('taskPriority').value;
+      const userId = localStorage.getItem('userId');
+    
+      if (!title) {
+        alert('Please enter a task title.');
+        return;
+      }
+    
+      if (!userId || userId === 'undefined') {
+        console.error('Invalid userId in localStorage');
+        alert('Session expired. Please log in again.');
+        window.location.href = 'login.html';
+        return;
+      }
+    
+      fetch(`${API_URL}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          title, 
+          description, 
+          dueDate,
+          priority,
+          userId 
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            throw new Error(data.message || 'Failed to add task');
+          });
+        }
+        
+        // Clear form
+        document.getElementById('taskTitle').value = '';
+        document.getElementById('taskDescription').value = '';
+        document.getElementById('taskDueDate').value = '';
+        document.getElementById('taskPriority').value = 'Green';
+        
+        // Refresh the Angular scope
+        const scope = angular.element(document.querySelector('[ng-controller="TaskController"]')).scope();
+        scope.fetchTasks();
+        scope.$apply();
+      })
+      .catch(error => {
+        console.error('Error adding task:', error);
+        alert(`Error: ${error.message}`);
+      });
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('userId');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>
